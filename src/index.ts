@@ -92,7 +92,10 @@ export default function jiraIssue(options: Options) {
     }
     case 'title and commits': {
       const allCommits = danger.gitlab.commits
-        .map(commit => `${commit.title} ${commit.message}`)
+        .map(
+          (commit: { title: any; message: any }) =>
+            `${commit.title} ${commit.message}`
+        )
         .join(' ')
       jiraLocation = `${danger.gitlab.mr.title} ${allCommits}`
       break
