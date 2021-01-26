@@ -26,7 +26,7 @@ export interface Options {
    * The location of the JIRA issue, either the PR title, or the git branch
    * Defaults to `title`
    */
-  location?: 'title' | 'branch'
+  location?: 'title' | 'branch' | 'title and commits'
 
   /**
    * Should fail instead of warn
@@ -88,6 +88,13 @@ export default function jiraIssue(options: Options) {
     }
     case 'branch': {
       jiraLocation = danger.gitlab.mr.source_branch
+      break
+    }
+    case 'title and commits': {
+      const allCommits = danger.gitlab.commits
+        .map(commit => `${commit.title} ${commit.message}`)
+        .join(' ')
+      jiraLocation = `${danger.gitlab.mr.title} ${allCommits}`
       break
     }
     default: {
